@@ -47,10 +47,11 @@ The application follows a **client–server architecture** with real-time commun
 flowchart TD
     U["User Browser"]
     F["React + Vite Frontend"]
-    B["Node.js + Express Backend"]
+    B["Node + Express Backend"]
     D[("MongoDB Atlas")]
 
     U -->|HTTPS| F
-    F -->|Socket.IO (WebSocket)| B
+    F -->|WebSocket| B
     B -->|Mongoose| D
-    B -->|Live Stock Updates| F
+    B -->|Live Updates| F
+
