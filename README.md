@@ -34,16 +34,23 @@ https://stock-dashboard-backend-97xy.onrender.com
 
 ---
 
-## 🏗️ System Architecture Diagram
+## 🏗️ System Architecture
+
+The application follows a **client–server architecture** with real-time communication.
+
+- The **React + Vite frontend** runs in the browser and connects to the backend using **Socket.IO**
+- The **Node.js + Express backend** handles WebSocket connections and business logic
+- **MongoDB Atlas** stores user accounts and stock subscriptions permanently
+- Stock prices are generated on the backend and pushed to clients in real time
 
 ```mermaid
-graph TD
-    U[User Browser]
-    F[React + Vite Frontend]
-    B[Node.js + Express Backend]
-    D[(MongoDB Atlas)]
+flowchart TD
+    U["User Browser"]
+    F["React + Vite Frontend"]
+    B["Node.js + Express Backend"]
+    D[("MongoDB Atlas")]
 
     U -->|HTTPS| F
-    F -->|WebSocket (Socket.IO)| B
+    F -->|Socket.IO (WebSocket)| B
     B -->|Mongoose| D
-    B -->|Live Updates| F
+    B -->|Live Stock Updates| F
