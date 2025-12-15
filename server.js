@@ -6,7 +6,7 @@ import http from "http";
 import dotenv from "dotenv";
 import User from "./models/User.js";
 
-dotenv.config(); // ⭐ LOAD ENV VARIABLES
+dotenv.config(); // load env variables
 
 const app = express();
 app.use(cors());
@@ -18,18 +18,15 @@ const io = new Server(server, {
   cors: { origin: "*" }
 });
 
-// ⭐ CONNECT TO MONGODB ATLAS (NOT LOCAL)
+// ✅ CORRECT MongoDB Atlas connection (NO deprecated options)
 mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+  .connect(process.env.MONGO_URL)
   .then(() => console.log("MongoDB Atlas connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const STOCKS = ["GOOG", "TSLA", "AMZN", "META", "NVDA"];
 
-// ⚡ SOCKET.IO real-time logic
+// 🔴 SOCKET.IO LOGIC
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
@@ -44,13 +41,11 @@ io.on("connection", (socket) => {
     socket.userId = user._id.toString();
     console.log(`${email} logged in with userID ${socket.userId}`);
 
-    // SEND PERMANENT SUBSCRIPTIONS FROM DB
+    // send saved subscriptions
     socket.emit("loadSubscriptions", user.subscriptions);
 
-    // JOIN ROOMS
-    user.subscriptions.forEach((stock) => {
-      socket.join(stock);
-    });
+    // join rooms
+    user.subscriptions.forEach((stock) => socket.join(stock));
   });
 
   socket.on("subscribe", async (stock) => {
@@ -72,7 +67,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// 🚀 STOCK PRICE GEN EVERY 1 SEC
+// 🔁 STOCK PRICE UPDATES
 setInterval(() => {
   STOCKS.forEach((stock) => {
     const price = (Math.random() * 1000 + 100).toFixed(2);
@@ -80,7 +75,7 @@ setInterval(() => {
   });
 }, 1000);
 
-// ⭐ USE ENV PORT (IMPORTANT FOR HOSTING)
+// ✅ PORT FOR RENDER
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () =>
   console.log(`Server running on port ${PORT}`)
