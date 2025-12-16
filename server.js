@@ -17,7 +17,6 @@ const io = new Server(server, {
   cors: { origin: "*" }
 });
 
-
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => console.log("MongoDB Atlas connected"))
